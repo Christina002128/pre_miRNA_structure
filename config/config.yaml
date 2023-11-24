@@ -1,0 +1,9 @@
+genomes:
+  firstorganism:
+    seq: /path/to/firstorganism.fa
+    ann: /path/to/firstorganism.gff3
+  secondorganism:
+    seq: /path/to/secondorganism.fa
+    ann: /path/to/secondorganism.gff3
+
+nseqs: 10

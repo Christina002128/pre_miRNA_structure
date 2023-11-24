@@ -1,93 +1,104 @@
-# mirna-str-predict
+# Tropic Associate Bioinformatician Assessment - miRNA structure predictions
 
 
+## Introduction
 
-## Getting started
+Welcome to your assignment for the role of Associate Bioinformatician. This assignment will be available to you until 4th December 2023 at 5pm and is composed of 2 parts:
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+- Four theoretical questions, detailed below. Please choose **two** to answer as separate issues.
+- A coding exercise to complete a Snakemake pipeline to extract miRNA precursor sequences from a genome and predict their secondary structure.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
 
-## Add your files
+This assignment is designed to assess your technical skills as well as your problem solving and communication abilities. Therefore, communication with the team around your progress is crucial, **there are no stupid questions**.
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+## Theoretical questions
 
+For each question, please aim to give high-level answers in a few sentences only. You are free to use assumptions in your answers, however please make sure they are clearly stated in your answers.
+
+1. One of Tropic's main activity revolves sequencing small RNA for analysis of miRNA expression in different tissues. Please outline what key challenges can be encountered
+when handling sRNAseq data.
+
+2. Following identification of a novel non-transgenic, gene edited banana plant, we aim to submit this candidate to a regulatory body for exemption from regulation. To this end, we are required to demonstrate the complete absence of transgenic sequences derived from our vector. To this extent, whole genome sequencing was performed on the plant of interest. Please describe the process you would follow from obtaining the raw sequencing data to proving absence of transgenic material in the genome.
+
+3. Whilst scouring the literature, you found a gene of interest providing drought resistance in Coconut (_Cocos nucifera_). You want to know if a similar gene is present in the coffee genome (_Coffea arabica_). Please detail the steps you would undertake.
+
+4. GEiGS Biocompute (https://www.geigs.com/) predicts solutions allowing to redirect endogenous miRNAs against novel endogenous or pathogenic targets. Please explain potential challenges you might encounter during implementation of GEiGS solutions _in planta_.
+
+
+## miRNA structure predictions exercise
+
+You are in charge of leading a project to accurately predict miRNA structures for the GEiGS Biocompute platform. Unfortunately, one of your colleagues just won the lottery and abruptly left the team, leaving the pipeline unfinished. Your first task is to complete this Snakemake pipeline to extract miRNA precursor sequences from a genome of your choice and predict their secondary structure. You're not alone in this project and can count on the help and collaboration of your team.
+
+## Instructions
+
+- You have "developer level" access to this repository, which means you won't be able
+  to push changes to the main branch. You'll have to branch out from main and
+  submit merge requests for review.
+- Feel free to do a single merge request for the whole thing, or several where
+each makes an incremental change
+- Look for hints in source code comments and complete the pipeline.
+- Use the merge request's comments section (and any other available features
+available in GitLab that you may find useful) to keep the team updated on your progress.
+
+### Input files
+
+You'll need to download a reference genome and its corresponding GFF3 file from
+a public database (e.g. ENSEMBL), and update the `config/config.yaml` file
+accordingly.
+
+### Output files
+
+The final output files should contain 4 tab-separated columns:
+- The miRNA ID (any identifier is fine)
+- The miRNA precursor sequence
+- The miRNA precursor structure in dot-bracket format
+- The structure's MFE
+
+### Hints
+
+#### Software requirements
+
+You will need conda to manage the required software packages for the pipeline. We suggest you install conda via
+[mambaforge](https://github.com/conda-forge/miniforge#mambaforge).
+
+After this, you should set up bioconda to access a vast library of
+bioinformatics software by running these commands:
+
+```bash
+conda config --add channels defaults
+conda config --add channels bioconda
+conda config --add channels conda-forge
+conda config --set channel_priority strict
 ```
-cd existing_repo
-git remote add origin https://gitlab.com/tropic-assignment-cz/mirna-str-predict.git
-git branch -M main
-git push -uf origin main
-```
 
-## Integrate with your tools
+Once you have conda installed and activated you can install Snakemake with
+`mamba install snakemake`.
 
-- [ ] [Set up project integrations](https://gitlab.com/tropic-assignment-cz/mirna-str-predict/-/settings/integrations)
+#### Running the pipeline
 
-## Collaborate with your team
+As it is, by completing the TODO item in line 14 you will have a running
+pipeline which you can execute with `snakemake --use-conda -c`. This will create
+dummy output. We suggest you make sure you can obtain all dummy files before you start coding
+your solutions.
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+#### Software dependencies
 
-## Test and Deploy
+You should add any required software to each rule's environment yaml file,
+located in `workflow/envs`. As an example, the environments currently
+install the latest version of the `bedtools` package
+(which is not necessarily needed depending on how you go about implementing each
+rule).
 
-Use the built-in continuous integration in GitLab.
+#### Input files 
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+- Make sure you test the pipeline with at least 2 organisms (at the same time)
+- It's a good idea to choose smaller organisms to keep things quick
 
-***
+#### Processing GFF files
 
-# Editing this README
+You may choose writing your own code to parse the GFF files, or resort to a
+library (e.g. bcbio).
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+#### Predicting secondary structure
 
-## Suggestions for a good README
-
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+There are several libraries that can predict secondary RNA structure from sequence, one example is ViennaRNA.
