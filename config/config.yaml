@@ -1,9 +1,9 @@
 genomes:
-  firstorganism:
-    seq: /path/to/firstorganism.fa
-    ann: /path/to/firstorganism.gff3
-  secondorganism:
-    seq: /path/to/secondorganism.fa
-    ann: /path/to/secondorganism.gff3
+  Musa_acuminata:
+    seq: ./genomes/zea_mays.1/ncbi_dataset/data/GCF_902167145.1/GCF_902167145.1_Zm-B73-REFERENCE-NAM-5.0_genomic.fna
+    ann: ./genomes/zea_mays.1/zma.gff3
+  oryza_sativa_japonica:
+    seq: ./genomes/oryza_sativa_japonica/ncbi_dataset/data/GCF_001433935.1/GCF_001433935.1_IRGSP-1.0_genomic.fna
+    ann: ./genomes/oryza_sativa_japonica/osa.gff3
 
 nseqs: 10

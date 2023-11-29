@@ -1,5 +1,5 @@
 configfile: "config/config.yaml"
-
+# make output file for each organism
 def get_final_output(wc):
     for org in config["genomes"]:
         yield f"results/structures/{org}.tsv.gz"
@@ -11,14 +11,13 @@ rule all:
 rule extract_precursors:
     input: 
         seq=lambda wc: config["genomes"][wc.org]["seq"],
-        ann=#TODO: add path to annotations file
+        ann=lambda wc: config["genomes"][wc.org]["ann"], #TODO: add path to annotations file
     output:
         "results/precursors/{org}.fa.gz"
-    #TODO: add logging
+    log: "logs/extract_precursors_{org}.log" #TODO: add logging
     conda: "envs/extract_precursors.yaml"
     #TODO: implement the script (you may use an R script instead)
-    script:
-        "scripts/extract_precursors.py"
+    script: "workflow/scripts/extract_precursors.py"
 
 # predict the structure for all sequences in the fasta file (dot-bracket format)
 rule predict_structure:
@@ -26,13 +25,15 @@ rule predict_structure:
         "results/precursors/{org}.fa.gz"
     output:
         "results/structures/{org}.out.gz"
-    #TODO: add logging
+    log: "logs/predict_structure_{org}.log"   #TODO: add logging
     conda: "envs/predict_structure.yaml"
     #TODO: write shell code to process structures
     #      you may choose to use a 'script' directive instead
     shell: """
         echo "Here we predict structures for {wildcards.org}" | gzip > {output}
     """
+    # script:
+    # "scripts/predict_structure.py"
 
 # convert the predictions output to a tsv file
 # columns: sequence_id\tsequence\tstructure\tmfe
