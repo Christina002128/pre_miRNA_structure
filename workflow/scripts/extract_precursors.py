@@ -2,7 +2,7 @@ from Bio import SeqIO
 from Bio.Seq import Seq
 from BCBio import GFF
 import gzip
-
+import snakemake
 # File paths from Snakemake variables
 org = snakemake.wildcards.org
 seq_file = snakemake.input.seq

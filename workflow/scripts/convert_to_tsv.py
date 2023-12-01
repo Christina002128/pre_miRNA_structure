@@ -1,6 +1,5 @@
 import gzip
 # File paths from Snakemake variables
-org = snakemake.wildcards.org
 input_file = snakemake.input
 output_file = snakemake.output[0]
 

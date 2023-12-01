@@ -14,10 +14,12 @@ rule extract_precursors:
         ann=lambda wc: config["genomes"][wc.org]["ann"], #TODO: add path to annotations file
     output:
         "results/precursors/{org}.fa.gz"
-    log: "logs/extract_precursors_{org}.log" #TODO: add logging
+    log: 
+        stdout="logs/extract_precursors_{org}.stdout", 
+        stderr="logs/extract_precursors_{org}.stderr"
     conda: "envs/extract_precursors.yaml"
     #TODO: implement the script (you may use an R script instead)
-    script: "workflow/scripts/extract_precursors.py > {log} 2>&1 "
+    shell: "python3 workflow/scripts/extract_precursors.py > {log.stdout} 2> {log.stderr} "
 
 # predict the structure for all sequences in the fasta file (dot-bracket format)
 rule predict_structure:
@@ -25,14 +27,16 @@ rule predict_structure:
         "results/precursors/{org}.fa.gz"
     output:
         "results/structures/{org}.out.gz"
-    log: "logs/predict_structure_{org}.log"   #TODO: add logging
+    log: 
+        stdout="logs/predict_structure_{org}.stdout", 
+        stderr="logs/predict_structure_{org}.stderr"
     conda: "envs/predict_structure.yaml"
     #TODO: write shell code to process structures
     #      you may choose to use a 'script' directive instead
     shell: """
-        echo "Here we predict structures for {wildcards.org}" > {log} 2>&1
+        echo "Here we predict structures for {wildcards.org}" 
         gunzip {input}
-        RNAfold --noPS -i {input[:-3]} > {output[:-3]}  > {log} 2>&1 
+        RNAfold --noPS -i {input[:-3]} > {output[:-3]}  > {log.stdout} 2> {log.stderr}
         gzip {output[:-3]} > {output}
     """
 
@@ -43,7 +47,9 @@ rule convert_to_tsv:
         "results/structures/{org}.out.gz"
     output:
         "results/structures/{org}.tsv.gz"
-    log: "logs/convert_to_csv_{org}.log" #TODO: add logging
+    log: 
+        stdout="logs/convert_to_csv_{org}.stdout", 
+        stderr="logs/convert_to_csv_{org}.stderr"
     #TODO: write shell code to convert the structures output to tsv
-    script: "workflow/scripts/convert_to_tsv.py > {log} 2>&1 "
+    shell: "python3 workflow/scripts/convert_to_tsv.py  > {log.stdout} 2> {log.stderr}"
 

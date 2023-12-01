@@ -1,7 +1,7 @@
 genomes:
   Musa_acuminata:
-    seq: ./genomes/zea_mays.1/ncbi_dataset/data/GCF_902167145.1/GCF_902167145.1_Zm-B73-REFERENCE-NAM-5.0_genomic.fna
-    ann: ./genomes/zea_mays.1/zma.gff3
+    seq: ./genomes/zea_mays/ncbi_dataset/data/GCF_902167145.1/GCF_902167145.1_Zm-B73-REFERENCE-NAM-5.0_genomic.fna
+    ann: ./genomes/zea_mays/zma.gff3
   oryza_sativa_japonica:
     seq: ./genomes/oryza_sativa_japonica/ncbi_dataset/data/GCF_001433935.1/GCF_001433935.1_IRGSP-1.0_genomic.fna
     ann: ./genomes/oryza_sativa_japonica/osa.gff3

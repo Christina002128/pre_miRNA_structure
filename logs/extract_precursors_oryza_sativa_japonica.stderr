@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/Users/zhangxiaoyan/Documents/mirna-str-predict/workflow/scripts/extract_precursors.py", line 7, in <module>
+    org = snakemake.wildcards.org
+          ^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'snakemake' has no attribute 'wildcards'
