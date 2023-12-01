@@ -14,12 +14,18 @@ rule extract_precursors:
         ann=lambda wc: config["genomes"][wc.org]["ann"], #TODO: add path to annotations file
     output:
         "results/precursors/{org}.fa.gz"
+    params:
+        nseqs=config['nseqs'] 
     log: 
         stdout="logs/extract_precursors_{org}.stdout", 
         stderr="logs/extract_precursors_{org}.stderr"
     conda: "envs/extract_precursors.yaml"
     #TODO: implement the script (you may use an R script instead)
-    shell: "python3 workflow/scripts/extract_precursors.py > {log.stdout} 2> {log.stderr} "
+    shell: """
+    echo "Extract precursors for {wildcards.org}..."
+    python3 workflow/scripts/extract_precursors.py {input} {params.nseqs} {output} \
+    > {log.stdout} 2> {log.stderr} 
+    """
 
 # predict the structure for all sequences in the fasta file (dot-bracket format)
 rule predict_structure:
@@ -27,17 +33,20 @@ rule predict_structure:
         "results/precursors/{org}.fa.gz"
     output:
         "results/structures/{org}.out.gz"
+    params:
+        par_in="results/precursors/{org}.fa",
+        par_out="results/structures/{org}.out"
     log: 
-        stdout="logs/predict_structure_{org}.stdout", 
-        stderr="logs/predict_structure_{org}.stderr"
+        "logs/predict_structure_{org}.std", 
     conda: "envs/predict_structure.yaml"
     #TODO: write shell code to process structures
     #      you may choose to use a 'script' directive instead
     shell: """
-        echo "Here we predict structures for {wildcards.org}" 
-        gunzip {input}
-        RNAfold --noPS -i {input[:-3]} > {output[:-3]}  > {log.stdout} 2> {log.stderr}
-        gzip {output[:-3]} > {output}
+        echo "Predict structures for {wildcards.org}..." 
+        gzip -d {input}
+        echo "" > {params.par_out}
+        RNAfold --noPS --infile={params.par_in}  > {params.par_out} 2> {log} 
+        gzip {params.par_out}
     """
 
 # convert the predictions output to a tsv file
@@ -51,5 +60,9 @@ rule convert_to_tsv:
         stdout="logs/convert_to_csv_{org}.stdout", 
         stderr="logs/convert_to_csv_{org}.stderr"
     #TODO: write shell code to convert the structures output to tsv
-    shell: "python3 workflow/scripts/convert_to_tsv.py  > {log.stdout} 2> {log.stderr}"
+    shell: """
+    echo "Converting to tsv format for {wildcards.org}..." 
+    python3 workflow/scripts/convert_to_tsv.py {input} {output}  > {log.stdout} 2> {log.stderr}
+    echo "Result is in {output}." 
+    """
 
