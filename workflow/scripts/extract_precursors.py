@@ -1,36 +1,53 @@
-# import gzip
-
-# with gzip.open(snakemake.output[0], "wt") as ofh:
-#     ofh.write(f"Here we extract precursors for {snakemake.wildcards.org}\n")
-
-
-import gzip
 from Bio import SeqIO
+from Bio.Seq import Seq
 from BCBio import GFF
-
-def extract_miRNA_precursors(ann_file, seq_file):
-    # Read the genome sequence
-    genome_seq = SeqIO.to_dict(SeqIO.parse(seq_file, "fasta"))
-
-    # Open the GFF file and parse it
-    with open(ann_file) as in_handle:
-        for rec in GFF.parse(in_handle, base_dict=genome_seq):
-            # Extract miRNA precursors
-            for feature in rec.features:
-                if feature.type == "miRNA":
-                    # Extract the precursor sequence
-                    start = feature.location.start.position
-                    end = feature.location.end.position
-                    precursor_seq = rec.seq[start:end]
-                    yield feature.id, precursor_seq
+import gzip
 
 # File paths from Snakemake variables
 org = snakemake.wildcards.org
 seq_file = snakemake.input.seq
 ann_file = snakemake.input.ann
+nseqs = snakemake.wildcards.nseqs
 output_file = snakemake.output[0]
 
-# Extract and write the precursors
-with gzip.open(output_file, "wt") as ofh:
-    for miRNA_id, seq in extract_miRNA_precursors(ann_file, seq_file):
-        ofh.write(f">{miRNA_id}\n{seq}\n")
+#Concatenate fasta file into a whole genome string
+with open(seq_file) as f:
+    # Parse the FASTA file
+    sequences = [str(record.seq) for record in SeqIO.parse(f, "fasta")]
+    # Concatenate all sequences into a single string
+    genome = ''.join(sequences).upper
+
+
+mirna_dict={} # store miRNA id and sequence
+
+# GFF file parsing
+with open(ann_file) as in_handle:
+    for rec in GFF.parse(in_handle):
+        i=0
+        # Extract DNA sequences that encodes miRNA precursors 
+        for feature in rec.features:
+            # only precursors, not matured miRNA
+            if feature.type == "miRNA_primary_transcript":
+                # Extract the sequence position
+                start = feature.location.start.position - 1
+                end = feature.location.end.position
+                # forward or reverse strand
+                strand = feature.strand
+                if strand==int(1):
+                    precursor = Seq(genome[start:end]).transcribe()
+                elif strand==int(-1):
+                    precursor = Seq(genome[start:end]).reverse_complement().transcribe()
+                else:
+                    print(f"Ambiguous strand ({feature.id})! Treat as + in default")
+                    precursor = Seq(genome[start:end]).transcribe()
+                #print(feature.id,len(precursor),precursor)
+                mirna_dict[feature.id] = precursor
+                i+=1
+                if i>=10:
+                    break
+
+# print(str(mirna_dict['MI0013204']))
+# output the miRNA sequence as fasta.gz format
+with gzip.open(output_file, "wt") as f:
+    for miRNA_id, seq in mirna_dict.items():
+        f.write(f">{miRNA_id}\n{str(seq)}\n")

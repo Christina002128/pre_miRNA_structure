@@ -17,7 +17,7 @@ rule extract_precursors:
     log: "logs/extract_precursors_{org}.log" #TODO: add logging
     conda: "envs/extract_precursors.yaml"
     #TODO: implement the script (you may use an R script instead)
-    script: "workflow/scripts/extract_precursors.py"
+    script: "workflow/scripts/extract_precursors.py > {log} 2>&1 "
 
 # predict the structure for all sequences in the fasta file (dot-bracket format)
 rule predict_structure:
@@ -30,10 +30,11 @@ rule predict_structure:
     #TODO: write shell code to process structures
     #      you may choose to use a 'script' directive instead
     shell: """
-        echo "Here we predict structures for {wildcards.org}" | gzip > {output}
+        echo "Here we predict structures for {wildcards.org}" > {log} 2>&1
+        gunzip {input}
+        RNAfold --noPS -i {input[:-3]} > {output[:-3]}  > {log} 2>&1 
+        gzip {output[:-3]} > {output}
     """
-    # script:
-    # "scripts/predict_structure.py"
 
 # convert the predictions output to a tsv file
 # columns: sequence_id\tsequence\tstructure\tmfe
@@ -42,9 +43,7 @@ rule convert_to_tsv:
         "results/structures/{org}.out.gz"
     output:
         "results/structures/{org}.tsv.gz"
-    #TODO: add logging
+    log: "logs/convert_to_csv_{org}.log" #TODO: add logging
     #TODO: write shell code to convert the structures output to tsv
-    #      you may choose to use a 'script' directive instead
-    shell: """
-        echo "Here we convert structures for {wildcards.org} to tsv" | gzip > {output}
-    """
+    script: "workflow/scripts/convert_to_tsv.py > {log} 2>&1 "
+
