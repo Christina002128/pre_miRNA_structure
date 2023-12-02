@@ -1,18 +1,18 @@
 
-# README.md for Your Bioinformatics Pipeline
+# README.md for Structure Prediction of miRNA Precursor Pipeline
 
 ---
 
 ## Overview
-This pipeline is designed for the extraction, analysis, and conversion of miRNA precursor sequences and structures in a bioinformatics context. Leveraging the Snakemake workflow management system, it automates the process of 
-sequence extraction, structure prediction, and data formatting, facilitating efficient and reproducible analyses.
+This pipeline is designed for the extraction, analysis, and conversion of miRNA precursor sequences and structures. Leveraging the Snakemake workflow management system, it automates the process of precursors sequence extraction, structure prediction, and data formatting, facilitating efficient and reproducible analyses.
 
 ---
 
-## Files and Structure
+## Scripts and Environment Files
 - **Snakefile**: Defines the workflow rules and dependencies.
-- **convert_to_tsv.py**: Converts data into TSV format.
 - **extract_precursors.py**: Extracts miRNA precursor sequences.
+- **convert_to_tsv.py**: Converts data into TSV format.
+- **config/config.yaml**: Conda configuration for Snakefile.
 - **extract_precursors.yaml**: Conda environment for `extract_precursors.py`.
 - **predict_structure.yaml**: Conda environment for RNA structure prediction.
 
@@ -42,16 +42,13 @@ sequence extraction, structure prediction, and data formatting, facilitating eff
 ---
 
 ## Usage
-1. Modify `config/config.yaml` to specify your datasets and parameters.
-2. Run the Snakemake pipeline:
+1. Download the genome sequence file in fasta format.
+2. Download the corresponding annotation file in GFF format, which annotates precursor sequences as *miRNA_primary_transcript*.
+2. Modify `config/config.yaml` to specify your genome sequence and annotation files, and the number of sequences you want to process.
+3. Run the Snakemake pipeline:
    ```bash
-   snakemake --use-conda
+   snakemake --use-conda -c <number of cores>
    ```
-
----
-
-## Contributing
-Contributions to this pipeline are welcome. Please read our contributing guidelines and submit pull requests or issues through the repository.
 
 ---
 
@@ -61,7 +58,7 @@ This project is licensed under the [MIT License](https://opensource.org/licenses
 ---
 
 ## Contact
-For questions or support, please contact [your-email@example.com](mailto:your-email@example.com).
+For questions or support, please contact [zxy002128@163.com].
 
 ---
 
