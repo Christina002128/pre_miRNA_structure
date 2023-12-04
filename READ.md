@@ -1,4 +1,4 @@
-# README.md for Structure Prediction of miRNA Precursor Pipeline
+# Structure Prediction of miRNA Precursor Pipeline
 
 ------------------------------------------------------------------------
 
