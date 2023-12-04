@@ -26,6 +26,7 @@ This pipeline is designed for the extraction, analysis, and conversion of miRNA 
 -   [BCBio-GFF](https://github.com/chapmanb/bcbb/tree/master/gff)
 -   [ViennaRNA](https://www.tbi.univie.ac.at/RNA/)
 
+ViennaRNA installing from conda is not compatible to MacOS M1 Chip. However, you can follow the instruction on their github page to install it manually: https://github.com/ViennaRNA/ViennaRNA 
 ------------------------------------------------------------------------
 
 ## Installation
@@ -52,7 +53,7 @@ This pipeline is designed for the extraction, analysis, and conversion of miRNA 
 
 1.  Download the genome sequence file in fasta format.
 
-2.  Download the corresponding annotation file in GFF format, which annotates precursor sequences as *miRNA_primary_transcript*.
+2.  Download the corresponding annotation file in GFF format, recommendly from [miRBase](https://mirbase.org), which annotates precursor sequences as *miRNA_primary_transcript*.
 
 3.  Modify `config/config.yaml` to specify your genome sequence and annotation files, and the number of sequences you want to process.
 
