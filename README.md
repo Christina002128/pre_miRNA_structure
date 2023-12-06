@@ -26,7 +26,7 @@ This pipeline is designed for the extraction, analysis, and conversion of miRNA 
 -   [BCBio-GFF](https://github.com/chapmanb/bcbb/tree/master/gff)
 -   [ViennaRNA](https://www.tbi.univie.ac.at/RNA/)
 
-ViennaRNA installing from conda is not compatible to MacOS M1 Chip. However, you can follow the instruction on their github page to install it manually: https://github.com/ViennaRNA/ViennaRNA 
+    ViennaRNA installing from conda is not compatible to MacOS M1 Chip. However, you can follow the instruction on their github page to install it manually: https://github.com/ViennaRNA/ViennaRNA 
 ------------------------------------------------------------------------
 
 ## Installation
